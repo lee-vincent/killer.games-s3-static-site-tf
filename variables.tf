@@ -3,8 +3,10 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "instance_type" {
-  description = "Type of EC2 instance to provision"
-  default     = "t2.micro"
+variable "domain_name" {
+  default = "killer.games"
 }
 
+variable "subdomain_name" {
+  default = "www.killer.games"
+}

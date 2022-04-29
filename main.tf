@@ -1,29 +1,34 @@
 provider "aws" {
-  region = var.region
+  region  = var.region
+  profile = "iam-admin-kg-prod"
+
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"] # Canonical
+resource "aws_s3_bucket" "killer_games" {
+  bucket = "killer.games"
 }
 
-resource "aws_instance" "ubuntu" {
-  count         = 1
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = var.instance_type
+resource "aws_s3_bucket" "www_killer_games" {
+  bucket = "www.killer.games"
+}
 
-  tags = {
-    Name = "ubuntu-instance-${count.index}"
+resource "aws_s3_bucket_website_configuration" "killer_games" {
+  bucket = aws_s3_bucket.killer_games.bucket
+
+  index_document {
+    suffix = "index.html"
   }
+
+  error_document {
+    key = "404.html"
+  }
+}
+
+resource "aws_s3_bucket_website_configuration" "www_killer_games" {
+  bucket = aws_s3_bucket.www_killer_games.bucket
+  redirect_all_requests_to {
+    host_name = var.domain_name
+    protocol  = "http"
+  }
+
 }

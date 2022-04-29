@@ -1,8 +1,3 @@
-output "instance_ami" {
-  value = ["${aws_instance.ubuntu[*].ami}"]
+output "website" {
+  value = aws_s3_bucket_website_configuration.killer_games.website_endpoint
 }
-
-output "instance_arn" {
-  value = ["${aws_instance.ubuntu[*].arn}"]
-}
-
